@@ -11,7 +11,7 @@ st.set_page_config(
 )
 
 st.title("👑 PROMPT MAKER FROM KING KAELANJASM")
-st.subheader("🚀 SEEDANCE 2.0 EDITION (Absolute Gender Lock)")
+st.subheader("🚀 SEEDANCE 2.0 EDITION (Dual-Anchor Precision)")
 st.markdown("---")
 
 # Initialize Gemini API securely from Streamlit Secrets
@@ -38,38 +38,41 @@ uploaded_model = st.sidebar.file_uploader(
 if uploaded_model:
     st.sidebar.image(Image.open(uploaded_model), caption="👤 Talent Terkunci", use_container_width=True)
 
-# 3. THE ULTRA REASONING ENGINE (GENDER BLINDFOLD & LOCALIZATION LOCK)
+# 3. DUAL-ANCHOR PRECISION ENGINE
 def generate_king_prompts(prod_image, model_image):
     system_instruction = """
-    You are the absolute master prompt engine for Seedance 2.0 and Nano Banana 2, personally tuned for KING KAELANJASM.
-    Your absolute number one priority is to match the exact visual gender of the human model image.
+    You are the absolute master prompt engine for Seedance 2.0 and Nano Banana 2, tuned for KING KAELANJASM.
+    You must maintain 100% identical product matching and 100% exact model gender matching simultaneously.
 
-    THE ABSOLUTE GENDER BLINDFOLD RULE (ANTI-HALLUCINATION):
-    1. IGNORE ALL TEXT INSIDE THE PRODUCT IMAGE. The product image is an e-commerce screenshot that may contain words like 'PRIA', 'MEN', 'COWOK', or 'SINGLET PRIA'. YOU MUST COMPLETELY BLIND YOURSELF TO THESE WORDS. Do NOT use them to determine gender.
-    2. LOOK ONLY AT THE SECOND IMAGE (MODEL IMAGE): Identify if the human talent is FEMALE or MALE based ONLY on visual inspection of their face and body.
-    3. IF THE MODEL IS FEMALE: The entire output inside 'alur_cerita' MUST strictly use female references ('model wanita', 'perempuan', 'cewek'). The 'seedance_prompt' MUST strictly use female tokens ('an alluring female model', 'beautiful woman', 'stunning female silhouette'). NEVER use the words 'male', 'man', 'pria', or 'cowok' anywhere in the output if the model is a woman.
+    ANCHOR 1: ABSOLUTE GENDER & SILHOUETTE LOCK
+    - Look ONLY at the human model image. Detect her exact visual gender (strictly Female/Woman if the photo shows a woman).
+    - Maintain her stunning, curvaceous hourglass silhouette and confident commercial allure. 
+    - NEVER use male terms ('pria', 'cowok', 'man') if the model is a woman.
 
-    STREET/STUDIO BANDAR LAMPUNG LOCALIZATION:
-    - Alternated beautifully between high-end INDOOR spaces and cinematic OUTDOOR settings in Bandar Lampung across 8 cuts (e.g., modern aesthetic cafe in Enggal, sunny street scene in Pahoman, moody urban vibes in Teluk Betung).
+    ANCHOR 2: 100% PRODUCT FIDELITY & PRINT LOCK
+    - Look at the garment garment in the product image. 
+    - Separate e-commerce UI text (ignore words like 'Pria' in the app banners) from the ACTUAL TEXT/GRAPHIC PRINTED ON THE CLOTHING.
+    - You MUST identify and read the exact words, font style, and graphic elements printed directly on the fabric (e.g., if it says 'Brooklyn 1991', you MUST write 'Brooklyn 1991 text print on the chest' inside the prompt). Describe the fabric texture, seams, and fit with absolute clone-like precision.
 
-    VARIATION VARIETY RULES (4 Genres):
-    Output exactly 4 distinct genres (Casual Streetwear, Cyberpunk/Techwear, Luxury High-Fashion Editorial, High-Energy Athletic/Sport), sorted with the highest-converting variation at Index 0.
+    INDONESIA & BANDAR LAMPUNG LOCALIZATION:
+    - Distribute 8 fast-cuts beautifully between high-end INDOOR spaces and cinematic OUTDOOR settings in Bandar Lampung (e.g., aesthetic cafe in Enggal, sunny streets of Pahoman, modern urban spots in Teluk Betung).
 
-    JSON FORMAT OUTPUT:
-    Return exactly 4 items in a clean, raw JSON array with keys: 'genre', 'judul', 'alur_cerita', and 'seedance_prompt'. Do not include markdown code block syntax.
+    OUTPUT SPECS (4 Genres):
+    - Output exactly 4 distinct genres, sorted from highest-converting to lowest.
+    - Deliver output in a raw JSON array with keys: 'genre', 'judul', 'alur_cerita', and 'seedance_prompt'. No markdown wrappers.
     """
 
     model = genai.GenerativeModel(
         model_name="gemini-2.5-flash",
         generation_config={
-            "temperature": 0.2, # Diturunkan super ekstrem ke 0.2 agar AI patuh total pada perintah gembok gender dan tidak berimprovisasi
+            "temperature": 0.25, # Keseimbangan optimal untuk kepatuhan logika gembok ganda
             "response_mime_type": "application/json"
         },
         system_instruction=system_instruction
     )
 
     response = model.generate_content([
-        "CRITICAL: Visually inspect the model image. Blind yourself to any text in the product image. Force the model's actual visual gender into all 4 high-conversion localized Bandar Lampung prompts.",
+        "Perform deep dual-anchor analysis. Lock the model's visual female gender/hourglass shape. Read and clone the exact print text/graphics from the garment fabric. Generate 4 high-conversion prompts localized to Bandar Lampung.",
         Image.open(prod_image),
         Image.open(model_image)
     ])
@@ -81,11 +84,11 @@ if not uploaded_product or not uploaded_model:
     st.info("💡 **Panduan HP Android:** Tap tombol `>` di ujung kiri atas layar untuk meng-upload Foto Baju dan Foto Wajah Model Talent Anda!")
 else:
     if st.button("👑 RACIK PROMPT KING KAELANJASM v2.0 👑", type="primary", use_container_width=True):
-        with st.spinner("🧠 Menjalankan Gembok Gender Absolut & Menyuntikkan Vibes Lampung..."):
+        with st.spinner("🧠 Mengunci Presisi Sablon Produk & Sinkronisasi Gender Model..."):
             try:
                 results = generate_king_prompts(uploaded_product, uploaded_model)
                 st.session_state['king_suite_outputs'] = results
-                st.success("🎉 Sukses! 4 Genre Allure Cewek Khas Lampung Berhasil Diracik Sempurna!")
+                st.success("🎉 Sukses! Produk 100% Kembar & Gender Terkunci Sempurna!")
             except Exception as e:
                 st.error(f"Gagal memproses gambar. Error: {e}")
 
