@@ -5,13 +5,13 @@ import json
 
 # 1. PAGE CONFIGURATION & MOBILE OPTIMIZED UI
 st.set_page_config(
-    page_title="Master Elka's Seedance Suite v3",
+    page_title="Master Elka's Seedance Ultra-Detail Engine",
     page_icon="🎬",
     layout="centered"
 )
 
-st.title("🎬 Seedance 2.0 Content Planner (High-Fidelity)")
-st.markdown("Kunci Detail Produk 100% Akurat untuk Menghindari Pelanggaran Komisi Affiliate.")
+st.title("🎬 Seedance 2.0 Ultra-Detail Content Planner")
+st.markdown("Membongkar detail produk secara mikro untuk akurasi video 100% konsisten.")
 st.write("---")
 
 # Initialize Gemini API securely from Streamlit Secrets
@@ -38,46 +38,47 @@ uploaded_model = st.sidebar.file_uploader(
 if uploaded_model:
     st.sidebar.image(Image.open(uploaded_model), caption="👤 Foto Model", use_container_width=True)
 
-# 3. BACKEND AI ENGINE (STRICT PRODUCT LOCK RULES)
+# 3. BACKEND AI ENGINE (ULTRA DETAIL GARMENT LOCKING)
 def generate_content_plan(prod_image, model_image):
     system_instruction = """
-    You are an expert AI Fashion Director and strict E-commerce Compliance Officer for TikTok Shop and Shopee Video Affiliate.
-    Your absolute priority is 100% PRODUCT FIDELITY. Misrepresenting garment details will cause seller policy violations.
+    You are a master AI Fashion Director and a High-Fidelity Prompt Engineer for Seedance 2.0 and Nano Banana 2.
+    Your absolute mandate is to eliminate all visual hallucinations and guarantee 100% garment continuity across video frames.
 
-    CRITICAL STEP FOR PRODUCT ANALYSIS:
-    Before writing any prompt, zoom into the product outfit image and extract the exact physical specifications:
-    1. Material & Texture: Is it shiny nylon, matte crinkle parachute fabric, fleece, or polyester?
-    2. Front Closures: Full-zip, half-zip, pullover, buttoned? What color is the zipper track?
-    3. Hood & Collar features: Are there drawstrings? What shape are the toggles/strings? (e.g., round black elastic strings with plastic tips).
-    4. Cuffs & Hems: Are the wrist cuffs elasticated, ribbed, velcro-strapped, or open?
-    5. Pockets: Are there zippered side pockets, kangaroo pockets, chest pockets?
+    CRITICAL INSTRUCTION FOR ANALYSIS:
+    Analyze the product image with microscopic focus. You must explicitly identify and describe:
+    1. Precise Fabric Material: (e.g., crinkle waterproof nylon, matte windbreaker texture, semi-glossy polyester, tech-fleece).
+    2. Zipper Anatomy: Exact location, type (e.g., full-length central black zipper track), and the visible zipper pull tab.
+    3. Hood & Drawstring Architecture: Detailed shape of the hood, tracking the exact color, thickness, and structure of the drawstrings (e.g., 'round woven black elastic drawstrings hanging from the hood collar with hard plastic cylinder tips').
+    4. Hardware & Accents: Text, small logos, elastic wrist cuffs, or specific pocket styles (e.g., 'zippered vertical welt side pockets').
 
-    PROMPT GENERATION ENGINE INSTRUCTIONS (Output exactly 5 options):
-    - 'judul': High-conversion Indonesian marketing hook title.
+    PROMPT GENERATION RULES (Output exactly 5 options):
+    For each option, you must output a JSON object containing:
+    - 'judul': Catchy Indonesian fashion affiliate marketing title.
     - 'alur_cerita': 13-second chronological video flow breakdown (In Indonesian).
-    - 'seedance_prompt': The video prompt for Seedance 2.0 / Nano Banana 2.
+    - 'seedance_prompt': The ultra-detailed prompt string.
 
-    STRICT RULES FOR 'seedance_prompt':
-    - Must enforce: "13s duration, 9:16 vertical aspect ratio, seamless looping animation".
-    - MUST accurately text-lock the model's ethnicity, hair, and facial structure from the model image.
-    - DO NOT just write a generic jacket name. You MUST explicitly embed the extracted micro-details (e.g., 'wearing the exact matte black windproof crinkle nylon parachute jacket featuring a matching full-length black front zipper closure, an attached hood with visible black round elastic drawstrings, two zippered side hand pockets, and tight elasticated wrist cuffs') into the motion scenes. Every scene must maintain these exact specifications to lock the image-to-video consistency.
-    - End with: "STRICT NEGATIVE: human, skin, text, words, letters, graphics, logos, choppy edits, music, bgm."
+    STRICT PROMPT STRUCTURE FOR 'seedance_prompt':
+    1. Technical Prefix: Start with "13s duration, 9:16 vertical aspect ratio, seamless looping animation, ultra-high-fidelity 8k commercial fashion videography."
+    2. Model Absolute Lock: Explicitly describe the man's features from the model image (e.g., 'an Indonesian male model with short dark hair, distinct mustache, defined jawline, confident expression, sawo matang skin tone').
+    3. Garment Micro-Specification: Describe the outfit by stitching ALL extracted hardware/fabric specs together. You MUST repeat the micro-details of the jacket (fabric texture, zipper track, hood drawstrings with plastic tips, cuff style) throughout the motion descriptions to anchor the AI's rendering.
+    4. Hyper-Detailed Scene Actions: Break down the 8 fast-cuts within the prompt paragraph by emphasizing how the jacket hardware interacts with light and motion (e.g., 'macro close-up shot tracking the full-length central black zipper gliding up', 'close-up on the hood showing the round woven black drawstrings swaying naturally', 'medium shot of the model walking, highlighting the wrinkled texture of the matte black waterproof nylon fabric under studio lights').
+    5. Technical Suffix: End with "STRICT NEGATIVE: human, skin, text, words, letters, graphics, logos, choppy edits, music, bgm."
 
     OUTPUT FORMAT REQUIREMENT:
-    Return response strictly as a raw JSON array containing exactly 5 objects with keys 'judul', 'alur_cerita', and 'seedance_prompt'. No markdown wrappers.
+    Return response strictly as a raw JSON array containing exactly 5 objects with keys 'judul', 'alur_cerita', and 'seedance_prompt'. No markdown wrappers like ```json.
     """
 
     model = genai.GenerativeModel(
         model_name="gemini-2.5-flash",
         generation_config={
-            "temperature": 0.7, # Sedikit diturunkan agar AI lebih patuh pada detail gambar asli
+            "temperature": 0.45, # Diturunkan secara ekstrem agar AI fokus pada detail faktual gambar, bukan improvisasi kreatif
             "response_mime_type": "application/json"
         },
         system_instruction=system_instruction
     )
 
     response = model.generate_content([
-        "Strictly analyze all micro-hardware and cloth details of the product image. Combine it with the model face to build 5 high-fidelity JSON packages.",
+        "Perform a micro-hardware and texture analysis on the product image. Merge it flawlessly with the model's physical features to construct 5 ultra-detailed JSON packages.",
         Image.open(prod_image),
         Image.open(model_image)
     ])
@@ -88,19 +89,19 @@ def generate_content_plan(prod_image, model_image):
 if not uploaded_product or not uploaded_model:
     st.info("💡 **Tips Android:** Klik tombol `>` di pojok kiri atas untuk upload foto baju & model wajah lo!")
 else:
-    if st.button("✨ Racik 5 Opsi Konten (Akurasi Tinggi)", type="primary", use_container_width=True):
-        with st.spinner("🤖 AI sedang membedah kancing, sleting, dan tali produk secara mikro..."):
+    if st.button("✨ Racik 5 Opsi Konten (Ultra-Detail Mode)", type="primary", use_container_width=True):
+        with st.spinner("🤖 AI sedang membedah serat kain, sleting, dan ujung tali secara mikro..."):
             try:
                 results = generate_content_plan(uploaded_product, uploaded_model)
                 st.session_state['mobile_content_results'] = results
-                st.success("🎉 Sukses! Detail produk terkunci rapat di semua prompt.")
+                st.success("🎉 Sukses! Prompt ultra-detail siap dicopas.")
             except Exception as e:
                 st.error(f"Terjadi kesalahan: {e}")
 
 # 5. DISPLAY RESULTS
 if 'mobile_content_results' in st.session_state:
     st.markdown("---")
-    st.markdown("### 📱 Hasil Rencana Konten Anti-Pelanggaran")
+    st.markdown("### 📱 Hasil Rencana Konten Ultra-Detail")
     
     for idx, item in enumerate(st.session_state['mobile_content_results'], start=1):
         with st.container(border=True):
@@ -109,5 +110,5 @@ if 'mobile_content_results' in st.session_state:
             st.markdown("**🎬 Alur Cerita Video (13 Detik, 8 Fast-Cuts):**")
             st.info(item['alur_cerita'])
             
-            st.markdown("**📋 Teks Prompt Seedance 2.0 (Gila Detail):**")
+            st.markdown("**📋 Teks Prompt Seedance 2.0 (Ultra-Detail Text Tokens):**")
             st.code(item['seedance_prompt'], language="text")
