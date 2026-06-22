@@ -72,7 +72,8 @@ def generate_seedance_prompts(uploaded_image, model_type):
     4. Anti-Sensor & Safety Guardrails: Every variation must append this exact negative prompt token block at the absolute end: "STRICT NEGATIVE: human, skin, text, words, letters, graphics, logos, choppy edits, music, bgm."
 
     OUTPUT FORMAT REQUIREMENT:
-    Return your response strictly as a raw JSON array containing exactly 10 string items, with no markdown formatting wraps like ```json or ```. Each string item represents one fully formed, single-paragraph prompt. 
+    Return your response strictly as a raw JSON array containing exactly 10 string items, with no markdown formatting wraps like ```json or 
+```. Each string item represents one fully formed, single-paragraph prompt. 
     Example format:
     [
       "Prompt text 1...",
@@ -80,8 +81,9 @@ def generate_seedance_prompts(uploaded_image, model_type):
     ]
     """
 
+    # Di sinilah perbaikannya, menggunakan model terbaru gemini-2.5-flash
     model = genai.GenerativeModel(
-        model_name="gemini-1.5-pro",
+        model_name="gemini-2.5-flash",
         generation_config={
             "temperature": 0.85,
             "response_mime_type": "application/json"
