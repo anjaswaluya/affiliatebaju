@@ -5,13 +5,13 @@ import json
 
 # 1. PAGE CONFIGURATION & UI SETUP
 st.set_page_config(
-    page_title="Master Elka's Seedance 2.0 Prompt Generator",
+    page_title="Master Elka's Seedance 2.0 Prompt Generator v2",
     page_icon="🎬",
     layout="wide"
 )
 
-st.title("🎬 Master Elka's Seedance 2.0 Prompt Generator")
-st.markdown("Optimize your outfit & apparel marketing workflow for Seedance 2.0 using advanced GenAI.")
+st.title("🎬 Master Elka's Seedance 2.0 Prompt Generator (Multi-Image v2)")
+st.markdown("Generasikan 5 prompt Seedance / Nano Banana 2 otomatis hanya dengan menggabungkan foto Model + foto Produk.")
 st.write("---")
 
 # Initialize Gemini API securely from Streamlit Secrets
@@ -21,67 +21,65 @@ else:
     st.error("❌ `GEMINI_API_KEY` tidak ditemukan di Streamlit Secrets. Harap konfigurasi di dashboard settings Streamlit Anda.")
     st.stop()
 
-# 2. SIDEBAR CONFIGURATION
-st.sidebar.header("📁 Configuration & Assets")
+# 2. SIDEBAR CONFIGURATION (Dua Tempat Upload)
+st.sidebar.header("📁 Upload Assets")
 
-# File Uploader
-uploaded_file = st.sidebar.file_uploader(
-    "Upload Product Screenshot", 
+# Uploader 1: Foto Produk
+uploaded_product = st.sidebar.file_uploader(
+    "1. Upload Foto Produk (Baju/Outfit)", 
     type=["png", "jpg", "jpeg"],
-    help="Upload foto screenshot baju/outfit yang mau dipasang ke model."
+    help="Upload foto screenshot baju yang mau dipromosikan."
 )
 
-if uploaded_file:
-    image = Image.open(uploaded_file)
-    st.sidebar.image(image, caption="Uploaded Product Screenshot", use_container_width=True)
+if uploaded_product:
+    prod_img = Image.open(uploaded_product)
+    st.sidebar.image(prod_img, caption="📦 Foto Produk Terdeteksi", use_container_width=True)
 
-# Model Selection
-model_selection = st.sidebar.radio(
-    "Select Model Profile:",
-    options=["Perempuan (Nana)", "Laki-laki (El)"],
-    index=0,
-    help="Pilih identitas avatar digital untuk video Seedance."
+# Uploader 2: Foto Model
+uploaded_model = st.sidebar.file_uploader(
+    "2. Upload Foto Model (Wajah/Talent)", 
+    type=["png", "jpg", "jpeg"],
+    help="Upload foto wajah model/talent (bisa foto diri sendiri atau model bebas)."
 )
 
-# 3. BACKEND SYSTEM INSTRUCTIONS & LOGIC
-def generate_seedance_prompts(uploaded_image, model_type):
-    if model_type == "Perempuan (Nana)":
-        model_profile_instruction = """
-        - Character Identity: 28 years old, Indonesian Chinese-Sundanese (Chindo-Sunda) female, beautiful natural face, signature "messy bun" hairstyle.
-        - Face Lock Requirement: You MUST explicitly include the phrase 'using reference file 402363.jpg for face lock' inside every prompt string.
-        """
-    else:  # Laki-laki (El)
-        model_profile_instruction = """
-        - Character Identity: Indonesian male, sharp nose (mancung), height 189 cm, weight 90 kg, athletic build, authentic Indonesian tan skin (kulit sawo matang).
-        - Face Lock Requirement: No external face lock reference file required. Rely explicitly on the character identity tokens.
-        """
+if uploaded_model:
+    model_img = Image.open(uploaded_model)
+    st.sidebar.image(model_img, caption="👤 Foto Model Terdeteksi", use_container_width=True)
 
-    system_instruction = f"""
-    You are an expert AI Video Prompt Engineer specialized in Seedance 2.0 video generation for high-end fashion and streetwear apparel marketing.
-    Your objective is to analyze the attached outfit/apparel image and generate exactly 10 unique, diverse, and ready-to-use prompt variations.
+# 3. BACKEND MULTIMODAL PROMPT ENGINE
+def generate_multimodal_prompts(prod_image, model_image):
+    
+    system_instruction = """
+    You are an expert AI Video Prompt Engineer specialized in Seedance 2.0 and Nano Banana 2 video generation.
+    You will be provided with TWO images:
+    1. A product image (apparel/clothing/outfit).
+    2. A model image (the person who will wear the outfit).
 
-    MODEL SPECIFICATION PROFILES:
-    {model_profile_instruction}
+    YOUR TASK:
+    Analyze the physical features, facial structure, skin tone, and gender of the person in the model image. 
+    Analyze the exact style, color, pattern, and texture of the apparel in the product image.
+    Then, generate exactly 5 unique, high-end commercial video prompt variations blending them together perfectly.
 
-    SEEDANCE 2.0 PROMPT ARCHITECTURE RULES (Apply to all 10 variations):
+    SEEDANCE 2.0 / NANO BANANA 2 PROMPT ARCHITECTURE RULES:
     1. Duration & Aspect Ratio: Every variation must start by enforcing "13s duration, 9:16 vertical aspect ratio, seamless looping animation".
-    2. Apparel Styling: The character specified above must wear the exact outfit/apparel from the uploaded image with 100% design, texture, and structural consistency.
-    3. Motion & Cinematic Sequencing Structure: Each variation must sequence exactly 8 fast-cut, high-energy dynamic lifestyle or commercial scenes. Compress these scenes seamlessly across the 13-second runtime. 
-       - Examples of scenes to mix, randomize, and match: runway walk, tight macro details of apparel stitching/texture, crisp studio poses, lookbook angles, interactive zipper or clothing adjustments, dramatic urban turns, or slow-motion fabric waves. 
-       - Ensure each of the 10 variations has a totally distinct narrative structure, backdrop setting (e.g., minimalist studio, Tokyo neon street, brutalist concrete wall, editorial studio), and sequence layout.
-    4. Anti-Sensor & Safety Guardrails: Every variation must append this exact negative prompt token block at the absolute end: "STRICT NEGATIVE: human, skin, text, words, letters, graphics, logos, choppy edits, music, bgm."
+    2. Character & Styling Locking: Describe the model from the provided model image accurately in text tokens (ethnicity, hair, age look, facial structure) and state that this character is wearing the exact outfit from the product image with 100% material consistency.
+    3. Motion Sequencing: Each variation must sequence exactly 8 fast-cut, high-energy dynamic commercial scenes (e.g., modern runway walk, macro close-up of cloth texture, clean studio posing, lookbook angles, interactive cloth adjustments, slow-motion turns) smoothly compressed into 13 seconds.
+    4. Settings Variation: Randomize the background environment across the 5 options (e.g., minimalist lighting studio, industrial concrete background, sleek retail store, modern city street).
+    5. Anti-Sensor & Safety Guardrails: Every variation must append this exact negative prompt token block at the absolute end: "STRICT NEGATIVE: human, skin, text, words, letters, graphics, logos, choppy edits, music, bgm."
 
     OUTPUT FORMAT REQUIREMENT:
-    Return your response strictly as a raw JSON array containing exactly 10 string items, with no markdown formatting wraps like ```json or 
-```. Each string item represents one fully formed, single-paragraph prompt. 
+    Return your response strictly as a raw JSON array containing exactly 5 string items, with no markdown formatting wraps like ```json or 
+```. Each string item represents one fully formed, single-paragraph prompt.
     Example format:
     [
       "Prompt text 1...",
-      "Prompt text 2..."
+      "Prompt text 2...",
+      "Prompt text 3...",
+      "Prompt text 4...",
+      "Prompt text 5..."
     ]
     """
 
-    # Di sinilah perbaikannya, menggunakan model terbaru gemini-2.5-flash
     model = genai.GenerativeModel(
         model_name="gemini-2.5-flash",
         generation_config={
@@ -91,10 +89,11 @@ def generate_seedance_prompts(uploaded_image, model_type):
         system_instruction=system_instruction
     )
 
-    pil_image = Image.open(uploaded_image)
+    # Kirim kedua gambar sekaligus ke Gemini 2.5 Flash
     response = model.generate_content([
-        "Analyze this outfit file and generate the 10 distinct Seedance 2.0 JSON prompt strings according to your system instructions.", 
-        pil_image
+        "Analyze both the model image and the product image to construct 5 highly detailed commercial video prompt strings for Seedance 2.0.",
+        Image.open(prod_image),
+        Image.open(model_image)
     ])
     
     return json.loads(response.text)
@@ -102,22 +101,22 @@ def generate_seedance_prompts(uploaded_image, model_type):
 # 4. MAIN INTERACTION SCREEN
 st.subheader("🚀 Generator Dashboard")
 
-if not uploaded_file:
-    st.info("💡 Silakan upload foto produk di sidebar terlebih dahulu untuk mengaktifkan AI Generator.")
+if not uploaded_product or not uploaded_model:
+    st.info("💡 Hubungkan kedua aset! Silakan upload Foto Produk DAN Foto Model di sidebar untuk mengaktifkan AI.")
 else:
-    if st.button("✨ Generate 10 Prompt Variations", type="primary", use_container_width=True):
-        with st.spinner("🤖 AI Gemini sedang menganalisis baju dan menyusun struktur prompt Seedance..."):
+    if st.button("✨ Generate 5 Premium Prompt Variations", type="primary", use_container_width=True):
+        with st.spinner("🤖 AI Gemini sedang memadukan wajah model dan detail produk Anda..."):
             try:
-                prompts = generate_seedance_prompts(uploaded_file, model_selection)
-                st.session_state['generated_prompts'] = prompts
-                st.success("🎉 Berhasil membuat 10 Variasi Prompt Seedance 2.0!")
+                prompts = generate_multimodal_prompts(uploaded_product, uploaded_model)
+                st.session_state['multimodal_prompts'] = prompts
+                st.success("🎉 Berhasil memadukan aset! 5 Prompt Seedance 2.0 siap digunakan.")
             except Exception as e:
-                st.error(f"Terjadi kesalahan saat membuat prompt: {e}")
+                st.error(f"Terjadi kesalahan saat memproses gambar: {e}")
 
-if 'generated_prompts' in st.session_state:
+if 'multimodal_prompts' in st.session_state:
     st.markdown("### 📋 Copy-Pasteable Prompt Variations")
-    st.caption("Klik tombol di pojok kanan setiap kotak untuk langsung menyalin teks prompt.")
+    st.caption("Salin prompt di bawah ini ke Seedance / Nano Banana 2 untuk melihat keajaibannya.")
     
-    for idx, prompt_text in enumerate(st.session_state['generated_prompts'], start=1):
-        with st.expander(f"🔍 Variasi {idx}", expanded=True):
+    for idx, prompt_text in enumerate(st.session_state['multimodal_prompts'], start=1):
+        with st.expander(f"🔍 Variasi {idx} (8 Scenes Dynamic Commercial)", expanded=True):
             st.code(prompt_text, language="text")
