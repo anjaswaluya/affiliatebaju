@@ -3,16 +3,16 @@ import google.generativeai as genai
 from PIL import Image
 import json
 
-# 1. PAGE CONFIGURATION & MOBILE OPTIMIZED UI
+# 1. APP INITIALIZATION & BRANDING
 st.set_page_config(
-    page_title="Master Elka's Seedance Ultra-Detail Engine",
-    page_icon="🎬",
-    layout="centered"
+    page_title="PROMPT MAKER FROM KING KAELANJASM SEEDANCE 2.0 EDITION",
+    page_icon="👑",
+    layout="centered" # Tetap centered agar layout padat dan rapi saat di-scroll di Android
 )
 
-st.title("🎬 Seedance 2.0 Ultra-Detail Content Planner")
-st.markdown("Membongkar detail produk secara mikro untuk akurasi video 100% konsisten.")
-st.write("---")
+st.title("👑 PROMPT MAKER FROM KING KAELANJASM")
+st.subheader("🚀 SEEDANCE 2.0 EDITION")
+st.markdown("---")
 
 # Initialize Gemini API securely from Streamlit Secrets
 if "GEMINI_API_KEY" in st.secrets:
@@ -21,94 +21,95 @@ else:
     st.error("❌ `GEMINI_API_KEY` tidak ditemukan di Streamlit Secrets.")
     st.stop()
 
-# 2. SIDEBAR CONFIGURATION
-st.sidebar.header("📁 Upload Assets")
+# 2. MOBILE-FRIENDLY SIDEBAR ASSETS UPLOADER
+st.sidebar.header("📁 Upload Center")
 
 uploaded_product = st.sidebar.file_uploader(
-    "1. Upload Foto Produk (Baju)", 
+    "1. Foto Produk (Semua Jenis Outfit)", 
     type=["png", "jpg", "jpeg"]
 )
 if uploaded_product:
-    st.sidebar.image(Image.open(uploaded_product), caption="📦 Foto Produk", use_container_width=True)
+    st.sidebar.image(Image.open(uploaded_product), caption="📦 Baju/Produk Terkunci", use_container_width=True)
 
 uploaded_model = st.sidebar.file_uploader(
-    "2. Upload Foto Model (Wajah)", 
+    "2. Foto Model / Wajah Talent", 
     type=["png", "jpg", "jpeg"]
 )
 if uploaded_model:
-    st.sidebar.image(Image.open(uploaded_model), caption="👤 Foto Model", use_container_width=True)
+    st.sidebar.image(Image.open(uploaded_model), caption="👤 Talent Terkunci", use_container_width=True)
 
-# 3. BACKEND AI ENGINE (ULTRA DETAIL GARMENT LOCKING)
-def generate_content_plan(prod_image, model_image):
+# 3. THE MAGIC REASONING ENGINE (ANTI GENDER-MISMATCH)
+def generate_king_prompts(prod_image, model_image):
     system_instruction = """
-    You are a master AI Fashion Director and a High-Fidelity Prompt Engineer for Seedance 2.0 and Nano Banana 2.
-    Your absolute mandate is to eliminate all visual hallucinations and guarantee 100% garment continuity across video frames.
+    You are the absolute master prompt engine for Seedance 2.0 and Nano Banana 2, personally tuned for KING KAELANJASM.
+    Your main task is to create 4 distinct genre variations, perfectly blending a model image and a product garment image with zero errors.
 
-    CRITICAL INSTRUCTION FOR ANALYSIS:
-    Analyze the product image with microscopic focus. You must explicitly identify and describe:
-    1. Precise Fabric Material: (e.g., crinkle waterproof nylon, matte windbreaker texture, semi-glossy polyester, tech-fleece).
-    2. Zipper Anatomy: Exact location, type (e.g., full-length central black zipper track), and the visible zipper pull tab.
-    3. Hood & Drawstring Architecture: Detailed shape of the hood, tracking the exact color, thickness, and structure of the drawstrings (e.g., 'round woven black elastic drawstrings hanging from the hood collar with hard plastic cylinder tips').
-    4. Hardware & Accents: Text, small logos, elastic wrist cuffs, or specific pocket styles (e.g., 'zippered vertical welt side pockets').
+    ULTRA-CRITICAL BRAIN STEP (GENDER & OUTFIT LOCK):
+    1. Scan the Model Image: Determine the exact gender (Male or Female), ethnicity, facial features, and hair structure. 
+    2. Scan the Product Image: Analyze the garment type, fit, micro-details (zippers, drawstrings, fabrics, logos).
+    3. Mandatory Alignment: You must NEVER change the gender of the model. If the model image is a Female, the generated video character MUST be strictly a woman/female, even if the garment text or tags say 'Pria/Men'. The garment must adapt to the model's actual gender and body structure in the scene.
 
-    PROMPT GENERATION RULES (Output exactly 5 options):
-    For each option, you must output a JSON object containing:
-    - 'judul': Catchy Indonesian fashion affiliate marketing title.
-    - 'alur_cerita': 13-second chronological video flow breakdown (In Indonesian).
-    - 'seedance_prompt': The ultra-detailed prompt string.
+    VARIATION VARIETY RULES:
+    You must output exactly 4 options representing 4 completely different filmmaking genres (e.g., Casual Streetwear, Cyberpunk/Techwear, Luxury High-Fashion Editorial, High-Energy Athletic/Sport).
+    - Every option MUST use completely different camera angles (e.g., extreme close-up, low-angle tracking, wide panoramic cinematic shot).
+    - Every option MUST take place in completely different settings and lighting conditions (e.g., neon-lit rainy Tokyo streets, bright sun-drenched minimalist studio, moody urban concrete warehouse).
+    - Order of presentation: Always sort the array from the absolute highest-converting, most visually striking integration style at the very top (Index 0).
 
-    STRICT PROMPT STRUCTURE FOR 'seedance_prompt':
-    1. Technical Prefix: Start with "13s duration, 9:16 vertical aspect ratio, seamless looping animation, ultra-high-fidelity 8k commercial fashion videography."
-    2. Model Absolute Lock: Explicitly describe the man's features from the model image (e.g., 'an Indonesian male model with short dark hair, distinct mustache, defined jawline, confident expression, sawo matang skin tone').
-    3. Garment Micro-Specification: Describe the outfit by stitching ALL extracted hardware/fabric specs together. You MUST repeat the micro-details of the jacket (fabric texture, zipper track, hood drawstrings with plastic tips, cuff style) throughout the motion descriptions to anchor the AI's rendering.
-    4. Hyper-Detailed Scene Actions: Break down the 8 fast-cuts within the prompt paragraph by emphasizing how the jacket hardware interacts with light and motion (e.g., 'macro close-up shot tracking the full-length central black zipper gliding up', 'close-up on the hood showing the round woven black drawstrings swaying naturally', 'medium shot of the model walking, highlighting the wrinkled texture of the matte black waterproof nylon fabric under studio lights').
-    5. Technical Suffix: End with "STRICT NEGATIVE: human, skin, text, words, letters, graphics, logos, choppy edits, music, bgm."
+    JSON FORMAT OUTPUT:
+    Return exactly 4 items in a clean, raw JSON array with keys: 'genre', 'judul', 'alur_cerita', and 'seedance_prompt'. Do not include markdown code block syntax.
 
-    OUTPUT FORMAT REQUIREMENT:
-    Return response strictly as a raw JSON array containing exactly 5 objects with keys 'judul', 'alur_cerita', and 'seedance_prompt'. No markdown wrappers like ```json.
+    STRICT PROMPT TEMPLATE FOR 'seedance_prompt':
+    Start with: "13s duration, 9:16 vertical aspect ratio, seamless looping animation, ultra-high-fidelity 8k commercial [GENRE_NAME] videography."
+    Followed by: Extreme detailed description of the model's actual gender/face from the image wearing the product garment with its microscopic hardware (zippers, drawstrings, exact textures).
+    Followed by: A sequence of 8 fast-cut cinematic movements showing varied camera lenses, lightning systems, and high-end scene placements.
+    End with: "STRICT NEGATIVE: human, skin, text, words, letters, graphics, logos, choppy edits, music, bgm."
     """
 
     model = genai.GenerativeModel(
         model_name="gemini-2.5-flash",
         generation_config={
-            "temperature": 0.45, # Diturunkan secara ekstrem agar AI fokus pada detail faktual gambar, bukan improvisasi kreatif
+            "temperature": 0.3, # Diturunkan ke 0.3 agar tingkat kecerdasan dan kepatuhan analitis mencapai titik maksimal
             "response_mime_type": "application/json"
         },
         system_instruction=system_instruction
     )
 
     response = model.generate_content([
-        "Perform a micro-hardware and texture analysis on the product image. Merge it flawlessly with the model's physical features to construct 5 ultra-detailed JSON packages.",
+        "Analyze both images. Lock the model's actual gender, map the product garment perfectly, and generate 4 diverse genre-based JSON objects sorted by best output.",
         Image.open(prod_image),
         Image.open(model_image)
     ])
     
     return json.loads(response.text)
 
-# 4. MAIN INTERACTION SCREEN
+# 4. MAIN INTERACTION INTERFACE
 if not uploaded_product or not uploaded_model:
-    st.info("💡 **Tips Android:** Klik tombol `>` di pojok kiri atas untuk upload foto baju & model wajah lo!")
+    st.info("💡 **Panduan HP Android:** Tap tombol `>` di ujung kiri atas layar untuk meng-upload Foto Baju dan Foto Wajah Model Talent Anda!")
 else:
-    if st.button("✨ Racik 5 Opsi Konten (Ultra-Detail Mode)", type="primary", use_container_width=True):
-        with st.spinner("🤖 AI sedang membedah serat kain, sleting, dan ujung tali secara mikro..."):
+    if st.button("👑 RACIK PROMPT KING KAELANJASM v2.0 👑", type="primary", use_container_width=True):
+        with st.spinner("🧠 Sistem Ajaib sedang mencocokkan anatomi gender dan mengunci micro-detail produk..."):
             try:
-                results = generate_content_plan(uploaded_product, uploaded_model)
-                st.session_state['mobile_content_results'] = results
-                st.success("🎉 Sukses! Prompt ultra-detail siap dicopas.")
+                results = generate_king_prompts(uploaded_product, uploaded_model)
+                st.session_state['king_suite_outputs'] = results
+                st.success("🎉 Sukses! 4 Genre Premium Berhasil Diracik Sempurna!")
             except Exception as e:
-                st.error(f"Terjadi kesalahan: {e}")
+                st.error(f"Gagal memproses gambar, pastikan format benar. Error: {e}")
 
-# 5. DISPLAY RESULTS
-if 'mobile_content_results' in st.session_state:
-    st.markdown("---")
-    st.markdown("### 📱 Hasil Rencana Konten Ultra-Detail")
+# 5. HIGH-END RESPONSIVE MOBILE DISPLAY
+if 'king_suite_outputs' in st.session_state:
+    st.write("---")
+    st.markdown("### 📱 Rencana Konten 4 Genre Teratas (Urutan Terbaik):")
     
-    for idx, item in enumerate(st.session_state['mobile_content_results'], start=1):
+    for idx, item in enumerate(st.session_state['king_suite_outputs'], start=1):
         with st.container(border=True):
-            st.markdown(f"#### 🌟 OPSI {idx}: {item['judul']}")
+            # Menampilkan tag nomor urut dan genre dengan format tebal menonjol
+            st.markdown(f"### 🔥 OPSI {idx} | Genre: {item['genre'].upper()}")
+            st.markdown(f"**📌 Judul Iklan:** {item['judul']}")
             
-            st.markdown("**🎬 Alur Cerita Video (13 Detik, 8 Fast-Cuts):**")
+            # Box Alur Cerita Berwarna Biru Kontras
+            st.markdown("**🎬 Alur Cerita Video (13 Detik - 8 Dynamic Scenes):**")
             st.info(item['alur_cerita'])
             
-            st.markdown("**📋 Teks Prompt Seedance 2.0 (Ultra-Detail Text Tokens):**")
+            # Box Copy Prompt Instan Sekali Tap
+            st.markdown("**📋 Teks Prompt Seedance 2.0 / Nano Banana 2:**")
             st.code(item['seedance_prompt'], language="text")
