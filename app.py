@@ -11,7 +11,7 @@ st.set_page_config(
 )
 
 st.title("👑 PROMPT MAKER FROM KING KAELANJASM")
-st.subheader("🚀 SEEDANCE 2.0 EDITION (Bandar Lampung Vibes)")
+st.subheader("🚀 SEEDANCE 2.0 EDITION (Absolute Gender Lock)")
 st.markdown("---")
 
 # Initialize Gemini API securely from Streamlit Secrets
@@ -38,47 +38,38 @@ uploaded_model = st.sidebar.file_uploader(
 if uploaded_model:
     st.sidebar.image(Image.open(uploaded_model), caption="👤 Talent Terkunci", use_container_width=True)
 
-# 3. THE MAGIC REASONING ENGINE (GENDER, ALLURE, & LOCALIZATION LOCK)
+# 3. THE ULTRA REASONING ENGINE (GENDER BLINDFOLD & LOCALIZATION LOCK)
 def generate_king_prompts(prod_image, model_image):
     system_instruction = """
     You are the absolute master prompt engine for Seedance 2.0 and Nano Banana 2, personally tuned for KING KAELANJASM.
-    Your priority is maximizing commercial conversion ("menjual") by maintaining high-end visual appeal, exact physical proportions, and an authentic Indonesian atmosphere.
+    Your absolute number one priority is to match the exact visual gender of the human model image.
 
-    ULTRA-CRITICAL SILHOUETTE & GENDER LOCK:
-    1. Scan the Model Image: Detect gender, facial aesthetics, and exact body silhouette. 
-    2. Capture Body Allure: If the input model features a well-proportioned, curvaceous, stunning, or hourglass body shape, you MUST explicitly lock and translate this into the prompt text tokens. Do NOT default to a flat, overly skinny body description.
-    3. Mandatory Gender Alignment: Ensure the outfit wraps perfectly around the model's actual gender as displayed in the input photo.
+    THE ABSOLUTE GENDER BLINDFOLD RULE (ANTI-HALLUCINATION):
+    1. IGNORE ALL TEXT INSIDE THE PRODUCT IMAGE. The product image is an e-commerce screenshot that may contain words like 'PRIA', 'MEN', 'COWOK', or 'SINGLET PRIA'. YOU MUST COMPLETELY BLIND YOURSELF TO THESE WORDS. Do NOT use them to determine gender.
+    2. LOOK ONLY AT THE SECOND IMAGE (MODEL IMAGE): Identify if the human talent is FEMALE or MALE based ONLY on visual inspection of their face and body.
+    3. IF THE MODEL IS FEMALE: The entire output inside 'alur_cerita' MUST strictly use female references ('model wanita', 'perempuan', 'cewek'). The 'seedance_prompt' MUST strictly use female tokens ('an alluring female model', 'beautiful woman', 'stunning female silhouette'). NEVER use the words 'male', 'man', 'pria', or 'cowok' anywhere in the output if the model is a woman.
 
-    STRICT INDONESIA & BANDAR LAMPUNG LOCALIZATION RULES:
-    - EVERY background scene, angle, and location across all cuts MUST be grounded in authentic Indonesian vibes, specifically localized to Bandar Lampung.
-    - Alternated beautifully between high-end INDOOR spaces and cinematic OUTDOOR settings.
-    - Utilize hyper-specific local backdrops in the prompt descriptions, such as: modern minimalist cafes in Enggal, scenic outdoor lookouts overlooking Lampung bay, tropical city vibes of Pahoman, moody urban textures of Teluk Betung, or premium Indonesian photography studio setups.
+    STREET/STUDIO BANDAR LAMPUNG LOCALIZATION:
+    - Alternated beautifully between high-end INDOOR spaces and cinematic OUTDOOR settings in Bandar Lampung across 8 cuts (e.g., modern aesthetic cafe in Enggal, sunny street scene in Pahoman, moody urban vibes in Teluk Betung).
 
     VARIATION VARIETY RULES (4 Genres):
-    Output exactly 4 distinct genres (Casual Streetwear, Cyberpunk/Techwear, Luxury High-Fashion Editorial, High-Energy Athletic/Sport), sorted with the highest-converting, most stunning variation at Index 0.
-    - Every option MUST use highly diverse camera angles across its 8 fast-cuts.
+    Output exactly 4 distinct genres (Casual Streetwear, Cyberpunk/Techwear, Luxury High-Fashion Editorial, High-Energy Athletic/Sport), sorted with the highest-converting variation at Index 0.
 
     JSON FORMAT OUTPUT:
     Return exactly 4 items in a clean, raw JSON array with keys: 'genre', 'judul', 'alur_cerita', and 'seedance_prompt'. Do not include markdown code block syntax.
-
-    STRICT PROMPT TEMPLATE FOR 'seedance_prompt':
-    Start with: "13s duration, 9:16 vertical aspect ratio, seamless looping animation, ultra-high-fidelity 8k commercial [GENRE_NAME] fashion videography, Indonesian cinematic style."
-    Followed by: Microscopic description of the model's actual gender, face, and stunning curvaceous body silhouette wearing the product garment with its exact micro-hardware details perfectly fitted.
-    Followed by: A seamless integration of 8 fast-cut cinematic movements changing angles while moving through realistic indoor and outdoor Bandar Lampung backdrops (e.g., pacing through a neon cafe in Enggal, walking along a sunny street in Pahoman).
-    End with: "STRICT NEGATIVE: human, skin, text, words, letters, graphics, logos, choppy edits, music, bgm."
     """
 
     model = genai.GenerativeModel(
         model_name="gemini-2.5-flash",
         generation_config={
-            "temperature": 0.35, 
+            "temperature": 0.2, # Diturunkan super ekstrem ke 0.2 agar AI patuh total pada perintah gembok gender dan tidak berimprovisasi
             "response_mime_type": "application/json"
         },
         system_instruction=system_instruction
     )
 
     response = model.generate_content([
-        "Analyze both images. Lock the model's gorgeous body shape, apply strict Bandar Lampung indoor/outdoor background localization across all 8 cuts, and generate 4 high-conversion commercial prompts.",
+        "CRITICAL: Visually inspect the model image. Blind yourself to any text in the product image. Force the model's actual visual gender into all 4 high-conversion localized Bandar Lampung prompts.",
         Image.open(prod_image),
         Image.open(model_image)
     ])
@@ -90,11 +81,11 @@ if not uploaded_product or not uploaded_model:
     st.info("💡 **Panduan HP Android:** Tap tombol `>` di ujung kiri atas layar untuk meng-upload Foto Baju dan Foto Wajah Model Talent Anda!")
 else:
     if st.button("👑 RACIK PROMPT KING KAELANJASM v2.0 👑", type="primary", use_container_width=True):
-        with st.spinner("🧠 Mengunci lekuk tubuh model dan menyuntikkan vibes Bandar Lampung..."):
+        with st.spinner("🧠 Menjalankan Gembok Gender Absolut & Menyuntikkan Vibes Lampung..."):
             try:
                 results = generate_king_prompts(uploaded_product, uploaded_model)
                 st.session_state['king_suite_outputs'] = results
-                st.success("🎉 Sukses! 4 Genre Allure Khas Lampung Berhasil Diracik Sempurna!")
+                st.success("🎉 Sukses! 4 Genre Allure Cewek Khas Lampung Berhasil Diracik Sempurna!")
             except Exception as e:
                 st.error(f"Gagal memproses gambar. Error: {e}")
 
